@@ -31,9 +31,16 @@ public class EditNoteActivity extends AppCompatActivity {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             Log.i(TAG, "onKeyDown: Back button pressed");
 
-            // Update the ArrayList so that the ListView is updated with any edited text
-            MainActivity.mNotes.set(mNoteIndex, editText.getText().toString());
-            MainActivity.arrayAdapter.notifyDataSetChanged();
+            // If mNoteIndex >= 0, means that note already exists
+            // If mNoteIndex < 0, means note does not exist and should be added to back of ArrayList
+            if(mNoteIndex >= 0) {
+                // Update the ArrayList so that the ListView is updated with any edited text
+                MainActivity.mNotes.set(mNoteIndex, editText.getText().toString());
+                MainActivity.arrayAdapter.notifyDataSetChanged();
+            } else {
+                MainActivity.mNotes.add(editText.getText().toString());
+                MainActivity.arrayAdapter.notifyDataSetChanged();
+            }
 
             finish();
         }

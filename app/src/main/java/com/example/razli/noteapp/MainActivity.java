@@ -3,6 +3,9 @@ package com.example.razli.noteapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,14 +34,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Start new activity
-                Intent intent = new Intent(getApplicationContext(), EditNoteActivity.class);
-
-                // Put extra that holds String of note
-                intent.putExtra("noteString", mNotes.get(position));
-                intent.putExtra("noteIndex", position);
-
-                startActivity(intent);
+                startEditNoteActivity(position);
             }
         });
+    }
+
+    // Note: If this function receives -1 as argument, means that user clicked "Add new note"
+    public void startEditNoteActivity(int indexOfNote) {
+
+        Intent intent = new Intent(getApplicationContext(), EditNoteActivity.class);
+
+        // Put extras that hold String of note & Index of note
+        if(indexOfNote >= 0) {
+            intent.putExtra("noteString", mNotes.get(indexOfNote));
+            intent.putExtra("noteIndex", indexOfNote);
+        } else {
+            intent.putExtra("noteIndex", indexOfNote);
+        }
+
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.side_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.addNewNote:
+                // Note: -1 is passed as note does not exist yet
+                startEditNoteActivity(-1);
+                break;
+            default: return false;
+        }
+
+        return true;
     }
 }
