@@ -3,7 +3,7 @@ package com.example.razli.noteapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class editNoteActivity extends AppCompatActivity {
+public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

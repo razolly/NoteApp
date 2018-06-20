@@ -30,7 +30,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Start new activity
-                Intent intent = new Intent(getApplicationContext(), )
+                Intent intent = new Intent(getApplicationContext(), EditNoteActivity.class);
+
+                // Put extra that holds String of note
+
+                startActivity(intent);
             }
         });
     }
