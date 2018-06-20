@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         noteListView = findViewById(R.id.noteListView);
 
         mNotes = new ArrayList<String>();
-        mNotes.add("Example Note");
+        mNotes.add("Here is an Example Note");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mNotes);
         noteListView.setAdapter(arrayAdapter);
@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), EditNoteActivity.class);
 
                 // Put extra that holds String of note
+                intent.putExtra("noteString", mNotes.get(position));
 
                 startActivity(intent);
             }
