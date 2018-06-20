@@ -13,7 +13,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ListView noteListView;
-    ArrayList<String> mNotes;
+    static ArrayList<String> mNotes;
+    static ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         mNotes = new ArrayList<String>();
         mNotes.add("Here is an Example Note");
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mNotes);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mNotes);
         noteListView.setAdapter(arrayAdapter);
         noteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Put extra that holds String of note
                 intent.putExtra("noteString", mNotes.get(position));
+                intent.putExtra("noteIndex", position);
 
                 startActivity(intent);
             }
