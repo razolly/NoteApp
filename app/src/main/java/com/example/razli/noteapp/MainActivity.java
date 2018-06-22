@@ -1,6 +1,8 @@
 package com.example.razli.noteapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +13,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,15 +25,26 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<String> mNotes;
     static ArrayAdapter<String> arrayAdapter;
     int mIndexOfNoteToDelete;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         noteListView = findViewById(R.id.noteListView);
+        sharedPreferences = this.getSharedPreferences("com.example.razli.noteapp", Context.MODE_PRIVATE);
 
-        mNotes = new ArrayList<String>();
-        mNotes.add("Here is an Example Note");
+        // Check SharedPreferences for any saved data. If there isn't, create new ArrayList to hold notes
+        if(sharedPreferences.contains("allNotes")) {
+            try {
+                mNotes = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("allNotes", ObjectSerializer.serialize(new ArrayList<String>())));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            mNotes = new ArrayList<String>();
+            mNotes.add("Here is an Example Note");
+        }
 
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mNotes);
         noteListView.setAdapter(arrayAdapter);
@@ -67,9 +82,12 @@ public class MainActivity extends AppCompatActivity {
 //                        })
 //                        .show();
 
-                // Delete the listView entry
+                // Delete the ListView entry and update
                 mNotes.remove(mIndexOfNoteToDelete);
                 arrayAdapter.notifyDataSetChanged();
+
+                // Update SharedPreferences
+                updateSharedPreferences(mNotes);
 
                 Log.i(TAG, "onItemLongClick: long click detected!");
                 return true;
@@ -91,6 +109,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         startActivity(intent);
+    }
+
+    public void updateSharedPreferences(ArrayList<String> arrayListToAdd) {
+
+        // Serialize first using ObjectSerializer because SharedPreferences can only take primitive data types
+        try {
+            sharedPreferences.edit().putString("allNotes", ObjectSerializer.serialize(arrayListToAdd)).apply();
+            Log.i(TAG, "updateSharedPreferences: " + ObjectSerializer.serialize(arrayListToAdd));
+            Toast.makeText(this, "Passed to shared preferences!", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
