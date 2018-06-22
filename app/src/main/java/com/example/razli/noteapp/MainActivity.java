@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mNotes);
         noteListView.setAdapter(arrayAdapter);
+
+        // If user taps (short) on item, start new activity to edit the note
         noteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 startEditNoteActivity(position);
             }
         });
+
+        // If user taps & holds (long) on item, delete the note
+        // Supposed to pop-up alert dialog, but keeps crashing
         noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -89,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 // Update SharedPreferences
                 updateSharedPreferences(mNotes);
 
-                Log.i(TAG, "onItemLongClick: long click detected!");
                 return true;
             }
         });
@@ -116,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
         // Serialize first using ObjectSerializer because SharedPreferences can only take primitive data types
         try {
             sharedPreferences.edit().putString("allNotes", ObjectSerializer.serialize(arrayListToAdd)).apply();
-            Log.i(TAG, "updateSharedPreferences: " + ObjectSerializer.serialize(arrayListToAdd));
-            Toast.makeText(this, "Passed to shared preferences!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Data saved!", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }

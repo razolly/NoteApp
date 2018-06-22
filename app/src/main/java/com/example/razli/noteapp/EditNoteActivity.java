@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,7 +37,6 @@ public class EditNoteActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Log.i(TAG, "onKeyDown: Back button pressed");
 
             if(mNoteIndex >= 0) {
                 // Update the ArrayList so that the ListView is updated with any edited text
@@ -65,8 +63,7 @@ public class EditNoteActivity extends AppCompatActivity {
         // Serialize first using ObjectSerializer because SharedPreferences can only take primitive data types
         try {
             sharedPreferences.edit().putString("allNotes", ObjectSerializer.serialize(arrayListToAdd)).apply();
-            Log.i(TAG, "updateSharedPreferences: " + ObjectSerializer.serialize(arrayListToAdd));
-            Toast.makeText(this, "Passed to shared preferences!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Data saved!", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
