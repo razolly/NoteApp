@@ -3,6 +3,7 @@ package com.example.razli.noteapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,9 +16,11 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     ListView noteListView;
     static ArrayList<String> mNotes;
     static ArrayAdapter<String> arrayAdapter;
+    int mIndexOfNoteToDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,41 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Start new activity
                 startEditNoteActivity(position);
+            }
+        });
+        noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                mIndexOfNoteToDelete = position;
+
+//                // todo: warning dialog should pop up. Note, this crashes the app
+//                new AlertDialog.Builder(getApplicationContext())
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .setTitle("Warning")
+//                        .setMessage("Are you sure you want to delete?")
+//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // Delete the listView entry
+//                                mNotes.remove(mIndexOfNoteToDelete);
+//                                arrayAdapter.notifyDataSetChanged();
+//                            }
+//                        })
+//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // Do nothing
+//                            }
+//                        })
+//                        .show();
+
+                // Delete the listView entry
+                mNotes.remove(mIndexOfNoteToDelete);
+                arrayAdapter.notifyDataSetChanged();
+
+                Log.i(TAG, "onItemLongClick: long click detected!");
+                return true;
             }
         });
     }
