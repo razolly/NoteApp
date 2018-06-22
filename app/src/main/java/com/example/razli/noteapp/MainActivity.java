@@ -1,8 +1,10 @@
 package com.example.razli.noteapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,40 +61,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // If user taps & holds (long) on item, delete the note
-        // Supposed to pop-up alert dialog, but keeps crashing
         noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 mIndexOfNoteToDelete = position;
 
-//                // todo: warning dialog should pop up. Note, this crashes the app
-//                new AlertDialog.Builder(getApplicationContext())
-//                        .setIcon(android.R.drawable.ic_dialog_alert)
-//                        .setTitle("Warning")
-//                        .setMessage("Are you sure you want to delete?")
-//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // Delete the listView entry
-//                                mNotes.remove(mIndexOfNoteToDelete);
-//                                arrayAdapter.notifyDataSetChanged();
-//                            }
-//                        })
-//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // Do nothing
-//                            }
-//                        })
-//                        .show();
+                new AlertDialog.Builder(MainActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Warning")
+                        .setMessage("Are you sure you want to delete?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Delete the listView entry
+                                mNotes.remove(mIndexOfNoteToDelete);
+                                arrayAdapter.notifyDataSetChanged();
 
-                // Delete the ListView entry and update
-                mNotes.remove(mIndexOfNoteToDelete);
-                arrayAdapter.notifyDataSetChanged();
-
-                // Update SharedPreferences
-                updateSharedPreferences(mNotes);
+                                // Update SharedPreferences
+                                updateSharedPreferences(mNotes);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing
+                            }
+                        })
+                        .show();
 
                 return true;
             }
